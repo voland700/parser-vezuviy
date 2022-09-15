@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Library\Parser;
+
 use DiDom\Document;
 use DiDom\Query;
 use GuzzleHttp\Client;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Http\File;
+
 
 
 class IndexController extends Controller
@@ -24,7 +28,7 @@ class IndexController extends Controller
             'referer' => true,
             'headers' => [
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.148 Atom/23.0.0.36 Safari/537.36',
-                'Referer' => $src
+                'Referer' => $url
             ]
         ]);
         if($res->getStatusCode()==200){
@@ -33,7 +37,6 @@ class IndexController extends Controller
         } else {
             return null;
         }
-
     }
 
 
@@ -99,4 +102,45 @@ class IndexController extends Controller
         }
         dd($moreImages);
     }
+
+
+
+    public function test2()
+    {
+
+        $src = 'https://vezuviy.su/gotovim-na-vezuvii-ru/smoker-kudesnik-2/';
+
+        /*
+                $document = new Document($src, true);
+                $mainImgLink = $document->first('.ty-product-img a')->getAttribute('href');
+
+                $client = new Client(['verify' => false]);
+
+                $tmpfile = tempnam(sys_get_temp_dir(),'dl');
+
+                $response = $client->request('GET', $mainImgLink, [
+                    'headers' => [
+                        'Authorization' => 'Bearer token'
+                    ],
+                    'sink' => $tmpfile
+                ]);
+
+                $ext = pathinfo($mainImgLink, PATHINFO_EXTENSION);
+
+                $fileName = $artNamber ? 'main_'.$artNamber.'.'.$ext : 'main_'.Str::lower(Str::random(7)).'.'.$ext;
+                $filePath = Storage::putFileAs('upload/main/', new File($tmpfile), $fileName);
+
+                */
+
+        $product = new Parser();
+        $data = $product->getProduct($src);
+
+        dd($data);
+
+    }
+
+
+
+
+
 }

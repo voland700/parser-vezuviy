@@ -22,3 +22,5 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/test', [App\Http\Controllers\Front\IndexController::class, 'test']);
+
+Route::get('/test2', [App\Http\Controllers\Front\IndexController::class, 'test2']);
