@@ -107,36 +107,10 @@ class IndexController extends Controller
 
     public function test2()
     {
-
-        $src = 'https://vezuviy.su/gotovim-na-vezuvii-ru/smoker-kudesnik-2/';
-
-        /*
-                $document = new Document($src, true);
-                $mainImgLink = $document->first('.ty-product-img a')->getAttribute('href');
-
-                $client = new Client(['verify' => false]);
-
-                $tmpfile = tempnam(sys_get_temp_dir(),'dl');
-
-                $response = $client->request('GET', $mainImgLink, [
-                    'headers' => [
-                        'Authorization' => 'Bearer token'
-                    ],
-                    'sink' => $tmpfile
-                ]);
-
-                $ext = pathinfo($mainImgLink, PATHINFO_EXTENSION);
-
-                $fileName = $artNamber ? 'main_'.$artNamber.'.'.$ext : 'main_'.Str::lower(Str::random(7)).'.'.$ext;
-                $filePath = Storage::putFileAs('upload/main/', new File($tmpfile), $fileName);
-
-                */
-
-        $product = new Parser();
-        $data = $product->getProduct($src);
-
-        dd($data);
-
+        //$url = 'https://vezuviy.su/gotovim-na-vezuvii-ru/fantastic-grill-legenda/';
+        $url = 'https://vezuviy.su/gotovim-na-vezuvii-ru/kostrovye-chashi/';
+        $links = Parser::getCategoryLinks($url);
+        dd($links);
     }
 
 

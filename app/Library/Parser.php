@@ -17,6 +17,7 @@ class Parser
 
     public $link;
     public $name;
+    public $categories;
     public $category;
     public $artNamber;
     public $image;
@@ -24,6 +25,9 @@ class Parser
     public $price;
     public $description;
     public $options;
+    public $documentation;
+    public $video;
+
     public $allowed;
 
 
@@ -31,6 +35,7 @@ class Parser
     {
         $this->link = null;
         $this->name = null;
+        $this->categories = null;
         $this->category = null;
         $this->artNamber = null;
         $this->image = null;
@@ -38,7 +43,9 @@ class Parser
         $this->price = null;
         $this->description = null;
         $this->options = [];
-        $this->allowed = null;
+        $this->documentation = [];
+        $this->video = [];
+        $this->allowed = false;
     }
 
     public static function agent()
@@ -100,6 +107,7 @@ class Parser
             ],
             'sink' => $tmpfile
         ]);
+        if (!$response->getStatusCode() == 200) return null;
         $ext = pathinfo($src, PATHINFO_EXTENSION);
         $fileName = $productNumber ? $folder.'_'.$key.'_'.$productNumber.'.'.$ext : $folder.'_'.$key.'_'.Str::lower(Str::random(9)).'.'.$ext;
         $filePath = Storage::putFileAs('upload/'.$folder, new File($tmpfile), $fileName);
@@ -118,22 +126,23 @@ class Parser
                 'Referer' => self::$userRefer
             ]
         ]);
-        if ($res->getStatusCode() == 200) {
-            $body = $res->getBody();
-            return $body->getContents();
-        } else {
-            return null;
-        }
+        if (!$res->getStatusCode() == 200) return null;
+        $body = $res->getBody();
+        return $body->getContents();
+
     }
 
 
     public function getProduct($src)
     {
+        $html = self::getContent($src);
+        if(!$html) return $this;
         $this->link = $src;
-        $this->allowed = null;
-        $document = new Document($src, true);
+        $this->allowed = true;
+        $document = new Document($html);
 
         $this->name =  $document->first('.ty-product-block-title bdi')->text();
+        $this->categories = trim($document->first('.ty-breadcrumbs')->text());
         $this->category = $document->first('.ty-breadcrumbs a:last-child')->text();
         $this->artNamber = $document->first('.ty-control-group__item')->text();
         $price =$document->first('.ty-price bdi span:first-child')->text();
@@ -162,21 +171,84 @@ class Parser
                 array_push($this->more,  $itemPath);
             }
         }
+        $docs = $document->find('.attachments p.attachment__item');
+        if(count($docs)>0){
+            foreach ($docs as $doc){
+                array_push($this->documentation, [
+                    'name'=>str_replace( '[Скачать]', '', trim($doc->text())),
+                    'link'=>$doc->first('a.attachment__a')->getAttribute('href')
+                ]);
+            }
+        }
 
+        $arrVideo = $document->find('#content_videos .cp-video-grid__item-name a');
+        if(count($arrVideo)>0){
+            foreach ($arrVideo as $itemVideo){
+                $linkToVideo = $itemVideo->getAttribute('href');
+                if($linkToVideo){
+                    $another = self::getContent($linkToVideo);
+                    if(!$another) continue;
+                    $videoContent = new Document($another);
+                    if($itemURL = $videoContent->first('.cp-video-detailed__video-wrapper iframe')->getAttribute('data-yt-id')){
+                        array_push($this->video, [
+                            'name'=>$videoContent->first('h1.ty-mainbox-title')->text(),
+                            'item'=>$itemURL
+                        ]);
+                    }
+                }
+            }
+        }
         return $this;
-
-
     }
 
+    public static function getPagination($url)
+    {
+        $html = self::getContent($url);
+        if(!$html) return false;
+        $document = new Document($html);
+        $pagination = [];
+        if($domPagination = $document->first('.ty-pagination__items')){
+            $selected = $domPagination->first('.ty-pagination__selected')->text();
+            $arrPagination = $domPagination->find('a.ty-pagination__item');
 
+            $pagination[$selected] = $url;
 
+            foreach ($arrPagination as $itemPagination){
+                $pagination[$itemPagination->text()] = $itemPagination->getAttribute('href');
+            }
+        }
+        return $pagination;
+    }
 
+    public static function getlinksOnePage($url)
+    {
+        $html = self::getContent($url);
+        if(!$html) return false;
+        $document = new Document($html);
+        $pageListLinks = [];
+        if(count($arrLinks = $document->find('a.product-title'))>0){
+            foreach ($arrLinks as $itemLink){
+                array_push($pageListLinks,  $itemLink->getAttribute('href'));
+            }
+        }
+        return $pageListLinks;
+    }
 
-
-
-
-
-
+    public static function getCategoryLinks($url)
+    {
+        $arrPages = self::getPagination($url);
+        $categoryLinks = [];
+        if(count($arrPages)>0){
+            foreach ($arrPages as $itemPage){
+                $links = self::getlinksOnePage($itemPage);
+                array_push($categoryLinks,  $links);
+            }
+            $categoryLinks = call_user_func_array('array_merge', $categoryLinks);
+        } else {
+            $categoryLinks = self::getlinksOnePage($url);
+        }
+        return $categoryLinks;
+    }
 
 
 }
