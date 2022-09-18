@@ -18,7 +18,7 @@
     <x-adminlte-card title="Данные для парсинга" class="col-12" collapsible removable maximizable>
         <div class="col-lg-6">
             <p>Для парсинга необходимо указать ссылку на каетгорию товров на сайте vezuviy.su</p>
-            <form role="form" method="post" action="{{ route('get.category') }}">
+            <form role="form" method="post" action="{{ route('get.products') }}">
                 @csrf
 
                 <div class="form-group">

@@ -147,8 +147,9 @@ class Parser
         $this->artNamber = $document->first('.ty-control-group__item')->text();
         $price =$document->first('.ty-price bdi span:first-child')->text();
         $this->price = str_replace("\xC2\xA0", "", $price);
-        $this->description  = $document->first('#content_description div')->innerHtml();
-
+        if($descrip = $document->first('#content_description div')){
+            $this->description  = $descrip->innerHtml();
+        }
         $ArrOptions = $document->find('#content_features .ty-product-feature');
         if(count($ArrOptions)>0){
             foreach ($ArrOptions as $itemOption){

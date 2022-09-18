@@ -10,6 +10,7 @@ class Test extends Model
     use HasFactory;
     protected $table = 'tests';
     protected $fillable = [
+            'link',
             'name',
             'categories',
             'category',
@@ -24,8 +25,8 @@ class Test extends Model
             'allowed',
     ];
 
-
-
-
-
+    public function getPropertiesAttribute()
+    {
+        return ($this->options) ? json_decode($this->options, true) : null;
+    }
 }

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('price')->nullable();
             $table->text('description')->nullable();
             $table->json('options')->nullable();
-            $table->json('description')->nullable();
+            $table->json('documentation')->nullable();
             $table->json('video')->nullable();
             $table->boolean('allowed')->default(true);
             $table->timestamps();

@@ -35,6 +35,8 @@ Route::get('/test', [App\Http\Controllers\Front\IndexController::class, 'test'])
 Route::get('/test2', [App\Http\Controllers\Front\IndexController::class, 'test2']);
 
 
+
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], function () {
 
     Route::get('/', [\App\Http\Controllers\Admin\IndexController::class, 'index'])->name('admin.index');
@@ -42,9 +44,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/category', [\App\Http\Controllers\Parser\ParserController::class, 'showCategory'])->name('show.category');
     Route::post('/category', [App\Http\Controllers\Parser\ParserController::class, 'getCategory'])->name('get.category');
 
+    Route::get('/products', [App\Http\Controllers\Parser\ParserController::class, 'showProductsToModel'])->name('show.products');
+    Route::post('/products', [App\Http\Controllers\Parser\ParserController::class, 'getProductsToModel'])->name('get.products');
 
 
-
-
+    Route::get('/list-products', [App\Http\Controllers\Parser\ParserController::class, 'listProductsToModel'])->name('list.products');
+    Route::get('/list-product/{id?}', [App\Http\Controllers\Parser\ParserController::class, 'getProductToModel'])->name('one.product');
 
 });
