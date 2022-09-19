@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Test extends Model
 {
@@ -29,4 +30,11 @@ class Test extends Model
     {
         return ($this->options) ? json_decode($this->options, true) : null;
     }
+    public function getImagesAttribute()
+    {
+        return ($this->more) ? Arr::join(json_decode($this->more, true), ',') : null;
+    }
+
+
+
 }

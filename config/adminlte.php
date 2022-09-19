@@ -311,23 +311,17 @@ return [
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
+
+        ['header' => 'Парсиг_контента'],
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'Товры по категориям',
+            'route'  => 'show.category',
+            'icon' => 'fas fa-fw fa-tags',
         ],
         [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text' => 'Парсинг по ссылкам',
+            'route'  => 'show.list-links',
+            'icon' => 'fas fa-bars nav-icon',
         ],
         [
             'text'    => 'multilevel',

@@ -44,6 +44,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/category', [\App\Http\Controllers\Parser\ParserController::class, 'showCategory'])->name('show.category');
     Route::post('/category', [App\Http\Controllers\Parser\ParserController::class, 'getCategory'])->name('get.category');
 
+    Route::get('/list-links', [\App\Http\Controllers\Parser\ParserController::class, 'showListLinks'])->name('show.list-links');
+    Route::post('/list-links', [App\Http\Controllers\Parser\ParserController::class, 'getListLinks'])->name('get.list-links');
+
+    Route::get('/source', [\App\Http\Controllers\Parser\ParserController::class, 'showGoodsOnSource'])->name('show.source');
+
+
+
+
+
+
     Route::get('/products', [App\Http\Controllers\Parser\ParserController::class, 'showProductsToModel'])->name('show.products');
     Route::post('/products', [App\Http\Controllers\Parser\ParserController::class, 'getProductsToModel'])->name('get.products');
 

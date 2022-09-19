@@ -3,16 +3,29 @@
 @section('title', 'Парсинг категрой товаров')
 
 @section('content_header')
-    <h1>Парсинг категрой товаров</h1>
+    <h1>Парсинг категорий товаров</h1>
 @stop
 
 @section('content')
-    @if ($message = Session::get('success'))
+    @if(session()->has('success'))
+    <div id="showAllert">
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <p>{{ $message }}</p>
+            <h5><i class="icon fas fa-check"></i> Данные получены!</h5>
+            {!! session()->get('success') !!}
+        </div>
+    </div>
+    @endif
+
+
+    @if(session()->has('error'))
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-ban"></i> Данные не получены!</h5>
+            {{ session()->get('error') }}
         </div>
     @endif
+
 
 
     <x-adminlte-card title="Данные для парсинга" class="col-12" collapsible removable maximizable>

@@ -8,6 +8,10 @@ use App\Library\Parser;
 
 use App\Models\Test;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductsExport;
 
 
 class ParserController extends Controller
@@ -19,11 +23,13 @@ class ParserController extends Controller
 
     public  function getCategory(Request $request)
     {
-
         $links = Parser::getCategoryLinks($request->link);
         $products =[];
+        $countLinks = 0;
+        $countProducts = 0;
         if($links){
             foreach ($links as $link){
+                $countLinks++;
                 $parser = new Parser;
                 $product = $parser->getProduct($link);
                 array_push($products,  $product);
@@ -31,7 +37,33 @@ class ParserController extends Controller
                 set_time_limit(0);
             }
         }
-        dd($products);
+
+        //собираем масив наимнований опций товаров
+        $allOpt = Arr::pluck($products, 'options');
+        $NamesProperty = [];
+        foreach ($allOpt as $itemOptions){
+            foreach ($itemOptions as $arrOne){
+                if(!in_array($arrOne['name'], $NamesProperty)){
+                    array_push($NamesProperty,  $arrOne['name']);
+                }
+            }
+        }
+
+        $countProducts = count($products);
+
+        $export = new ProductsExport($products, $NamesProperty);
+        $fileName = 'upload/export_products_'.time().'.xlsx';
+        $export->store($fileName, 'local');
+
+        //return view('parser.excel_table', compact('products', 'NamesProperty' ));
+
+        //return $fileName;
+        if($countProducts>0) {
+            $massage = 'Всего получено: <b>'.$countProducts.'</b> товара из <b>'.$countLinks.'</b>.   Файл:  <a href="'.'/'.$fileName.'" target="_blank">'.$fileName.'</a>';
+            return redirect()->back()->with('success', $massage);
+        } else{
+            return redirect()->back()->with('error', 'Что то пошло не так, проверти ссылки');
+        }
     }
 
     public function showProductsToModel()
@@ -77,35 +109,87 @@ class ParserController extends Controller
     }
 
 
-    public function getProductToModel($id = null)
+    public function showListLinks()
     {
-        if($id !== null){
-            $product = Test::find($id);
-        } else {
-            $product = Test::first();
-        }
-        $options = (json_decode($product->options, true));
-
-        dd($product->properties);
-
-        //return view('parser.table');
+        return view('parser.list_links');
     }
 
-    public function listProductsToModel()
+    public function getListLinks(Request $request)
     {
-        $products = Test::get();
+        $links  = $request->links;
+        $links = explode("\n", $links);
+
+
+        $products =[];
+        $countLinks = 0;
+        $countProducts = 0;
+        if($links){
+            foreach ($links as $link){
+                $countLinks++;
+                $parser = new Parser;
+                $product = $parser->getProduct(trim($link));
+                array_push($products,  $product);
+                sleep(1);
+                set_time_limit(0);
+            }
+        }
+
+        //собираем масив наимнований опций товаров
         $allOpt = Arr::pluck($products, 'options');
         $NamesProperty = [];
-        foreach ($allOpt as $itemOpt){
-            $arrAll = json_decode($itemOpt, true);
-            foreach ($arrAll as $arrOne){
+        foreach ($allOpt as $itemOptions){
+            foreach ($itemOptions as $arrOne){
                 if(!in_array($arrOne['name'], $NamesProperty)){
                     array_push($NamesProperty,  $arrOne['name']);
                 }
             }
         }
-        //dd($NamesProperty);
-        return view('parser.table', compact('products', 'NamesProperty' ));
+
+        $countProducts = count($products);
+
+        $export = new ProductsExport($products, $NamesProperty);
+        $fileName = 'upload/pars_products_'.time().'.xlsx';
+        $export->store($fileName, 'local');
+
+        //return view('parser.excel_table', compact('products', 'NamesProperty' ));
+
+        //return $fileName;
+        if($countProducts>0) {
+            $massage = 'Всего получено: <b>'.$countProducts.'</b> товара из <b>'.$countLinks.'</b>.   Файл:  <a href="'.'/'.$fileName.'" target="_blank">'.$fileName.'</a>';
+            return redirect()->back()->with('success', $massage);
+        } else{
+            return redirect()->back()->with('error', 'Что то пошло не так, проверти ссылки');
+        }
+
+    }
+
+
+    public function showGoodsOnSource()
+    {   $html = Parser::getContent('https://vezuviy.su');
+
+        $document = new \DiDom\Document($html);
+        $body = $document->first('body');
+
+        $document->first('script[type=text/javascript]')->remove();
+        $document->first('noscript')->remove();
+
+
+
+        //dd($metrika);
+
+
+
+        $element = new \DiDom\Element('script');
+        $element->setAttribute('src', env('APP_URL').'/assets/admin/source.js');
+
+        $body->appendChild($element);
+
+        $document->first('body')->replace($body);
+
+         echo $document->html();
+
+
+
     }
 
 
