@@ -152,10 +152,12 @@ class Parser
         }
         $ArrOptions = $document->find('#content_features .ty-product-feature');
         if(count($ArrOptions)>0){
+            $key = 1;
             foreach ($ArrOptions as $itemOption){
                 $property = $itemOption->first('.ty-product-feature__label')->text();
                 $value = $itemOption->first('.ty-product-feature__value')->text();
-                array_push($this->options,  ['name'=>$property, 'value'=>$value]);
+                $this->options[$key] = ['name'=>$property, 'value'=>$value];
+                $key++;
             }
         }
         $mainImgLink = $document->first('.ty-product-img a')->getAttribute('href');

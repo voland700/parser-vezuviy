@@ -113,6 +113,45 @@ class IndexController extends Controller
         dd($links);
     }
 
+    public function test3(){
+
+        $src = 'https://vezuviy.su/gotovim-na-vezuvii-ru/fantastic-grill-vezuviy-legenda-1000/';
+        /*
+
+        $document = new Document($src, true);
+        $ArrOptions = $document->find('#content_features .ty-product-feature');
+
+        $arrForJson = [];
+
+
+        if(count($ArrOptions)>0){
+            $arrItem = [];
+            $key = 1;
+            foreach ($ArrOptions as $itemOption){
+                $property = $itemOption->first('.ty-product-feature__label')->text();
+                $value = $itemOption->first('.ty-product-feature__value')->text();
+                //array_push($this->options,  ['name'=>$property, 'value'=>$value]);
+
+               $arrForJson[$key]= ['name'=>$property, 'value'=>$value];
+                $key++;
+            }
+        }
+
+
+        $arrForJson = json_encode($arrForJson,JSON_UNESCAPED_UNICODE);
+*/
+        $parser = new Parser;
+        $product = $parser->getProduct($src);
+
+        dd(json_encode($product->options,JSON_UNESCAPED_UNICODE));
+
+
+
+
+
+    }
+
+
 
 
 

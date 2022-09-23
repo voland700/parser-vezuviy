@@ -34,6 +34,8 @@ Route::get('/test', [App\Http\Controllers\Front\IndexController::class, 'test'])
 
 Route::get('/test2', [App\Http\Controllers\Front\IndexController::class, 'test2']);
 
+Route::get('/test3', [App\Http\Controllers\Front\IndexController::class, 'test3']);
+
 
 
 
@@ -60,5 +62,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
 
     Route::get('/list-products', [App\Http\Controllers\Parser\ParserController::class, 'listProductsToModel'])->name('list.products');
     Route::get('/list-product/{id?}', [App\Http\Controllers\Parser\ParserController::class, 'getProductToModel'])->name('one.product');
+
+
 
 });
