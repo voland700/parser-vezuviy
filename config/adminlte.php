@@ -323,6 +323,17 @@ return [
             'route'  => 'show.list-links',
             'icon' => 'fas fa-bars nav-icon',
         ],
+
+        ['header' => 'Работа с прайс-листами'],
+
+        [
+            'text' => 'Загрузка ориг. прайса',
+            'route'  => 'show.origin',
+            'icon' => 'nav-icon fas fa-file-import',
+        ],
+
+
+
         [
             'text'    => 'multilevel',
             'icon'    => 'fas fa-fw fa-share',

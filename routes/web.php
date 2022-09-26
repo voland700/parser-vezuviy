@@ -52,16 +52,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/source', [\App\Http\Controllers\Parser\ParserController::class, 'showGoodsOnSource'])->name('show.source');
 
 
-
-
-
-
     Route::get('/products', [App\Http\Controllers\Parser\ParserController::class, 'showProductsToModel'])->name('show.products');
     Route::post('/products', [App\Http\Controllers\Parser\ParserController::class, 'getProductsToModel'])->name('get.products');
 
 
     Route::get('/list-products', [App\Http\Controllers\Parser\ParserController::class, 'listProductsToModel'])->name('list.products');
     Route::get('/list-product/{id?}', [App\Http\Controllers\Parser\ParserController::class, 'getProductToModel'])->name('one.product');
+
+
+
+
+
+
+    Route::get('/origin', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportOrigenPrice'])->name('show.origin');
+    Route::post('/origin', [App\Http\Controllers\Price\ImportPriceListControllerr::class, 'getImportOrigenPrice'])->name('get.origin');
+
+
 
 
 
