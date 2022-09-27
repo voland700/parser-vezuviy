@@ -13,7 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('origins', function (Blueprint $table) {
+        Schema::create('temporaries', function (Blueprint $table) {
+            $table->bigInteger('product_id')->nullable();
+            $table->string('active')->nullable();
             $table->string('name')->nullable();
             $table->bigInteger('code')->nullable();
             $table->bigInteger('price')->nullable();
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('origins');
+        Schema::dropIfExists('temporaries');
     }
 };

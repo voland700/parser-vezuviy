@@ -16,6 +16,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\File;
 
 
+use App\Models\Origin;
+use App\Models\Temporary;
+
+
 
 class IndexController extends Controller
 {
@@ -114,36 +118,52 @@ class IndexController extends Controller
     }
 
     public function test3(){
+/*
+        $origin = Origin::select('name', 'code', 'price')->get();
+        $shop = Temporary::select('product_id', 'active', 'name', 'code', 'price')->get();
+        $data = [];
 
-        $src = 'https://vezuviy.su/gotovim-na-vezuvii-ru/fantastic-grill-vezuviy-legenda-1000/';
-        /*
-
-        $document = new Document($src, true);
-        $ArrOptions = $document->find('#content_features .ty-product-feature');
-
-        $arrForJson = [];
-
-
-        if(count($ArrOptions)>0){
-            $arrItem = [];
-            $key = 1;
-            foreach ($ArrOptions as $itemOption){
-                $property = $itemOption->first('.ty-product-feature__label')->text();
-                $value = $itemOption->first('.ty-product-feature__value')->text();
-                //array_push($this->options,  ['name'=>$property, 'value'=>$value]);
-
-               $arrForJson[$key]= ['name'=>$property, 'value'=>$value];
-                $key++;
-            }
+        foreach ($shop as $item){
+              $store = $origin->where('code', $item->code)->first();
+              //dd($store);
+              if($store) {
+                  $res = null;
+                  if((int)$item->price > (int)$store->price) $res= 'больше';
+                  if((int)$item->price < (int)$store->price) $res= 'меньше';
+                  $data['found'][] = [
+                      'id' => $item->product_id,
+                      'active' => $item->active,
+                      'name' => $item->name,
+                      'code' => $item->code,
+                      'old_price' => $item->price,
+                      'new_price' => $store->price,
+                      'changes' => $res
+                  ];
+              } else {
+                  $data['lack'][] = $item->toArray();
+              }
         }
 
+        $arrCode = $shop->pluck('code');
+        $data['absence'] = $origin->whereNotIn('code', $arrCode)->toArray();
 
-        $arrForJson = json_encode($arrForJson,JSON_UNESCAPED_UNICODE);
+        dd($data['absence']);
+
+
 */
-        $parser = new Parser;
-        $product = $parser->getProduct($src);
 
-        dd(json_encode($product->options,JSON_UNESCAPED_UNICODE));
+        $exempl = new \App\Library\ResearchData;
+        $data = $exempl->getData();
+
+
+
+       //return (new \App\Exports\ResearchDataAllExport($data))->download('data.xlsx');
+
+        return (new \App\Exports\Sheets\ResearchDataAbsenceExport($data['absence']))->download('data.xlsx');
+
+
+
+
 
 
 

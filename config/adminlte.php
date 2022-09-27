@@ -331,6 +331,11 @@ return [
             'route'  => 'show.origin',
             'icon' => 'nav-icon fas fa-file-import',
         ],
+        [
+            'text' => 'Загрузка данных магазина',
+            'route'  => 'show.temporary',
+            'icon' => 'nav-icon fas fa-file-import',
+        ],
 
 
 
