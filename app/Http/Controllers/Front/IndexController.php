@@ -13,6 +13,9 @@ use GuzzleHttp\Client;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
+use Illuminate\Support\Arr;
+
 use Illuminate\Http\File;
 
 
@@ -111,55 +114,67 @@ class IndexController extends Controller
 
     public function test2()
     {
-        //$url = 'https://vezuviy.su/gotovim-na-vezuvii-ru/fantastic-grill-legenda/';
-        $url = 'https://vezuviy.su/gotovim-na-vezuvii-ru/kostrovye-chashi/';
-        $links = Parser::getCategoryLinks($url);
-        dd($links);
+
+        dd((int)'4680046790545/4680046790521');
+
+
+
+
     }
 
     public function test3(){
-/*
-        $origin = Origin::select('name', 'code', 'price')->get();
-        $shop = Temporary::select('product_id', 'active', 'name', 'code', 'price')->get();
-        $data = [];
 
-        foreach ($shop as $item){
-              $store = $origin->where('code', $item->code)->first();
-              //dd($store);
-              if($store) {
-                  $res = null;
-                  if((int)$item->price > (int)$store->price) $res= 'больше';
-                  if((int)$item->price < (int)$store->price) $res= 'меньше';
-                  $data['found'][] = [
-                      'id' => $item->product_id,
-                      'active' => $item->active,
-                      'name' => $item->name,
-                      'code' => $item->code,
-                      'old_price' => $item->price,
-                      'new_price' => $store->price,
-                      'changes' => $res
-                  ];
-              } else {
-                  $data['lack'][] = $item->toArray();
-              }
+
+        $pechnik = [
+            4691 => [ 'id' => 4691,  'name' => 'Сенсация «АКВА» 16 (ДТ-4)  с баком 30л',  'code_first' => 4680046792006, 'code_second'  => 4680046791986],
+            4692 => [ 'id' => 4692,  'name' => 'Сенсация «АКВА» 22 (ДТ-4) с баком 40л',  'code_first' => 4680046792013, 'code_second'  => 4680046791993],
+            5012 => [ 'id' => 5012,  'name' => 'Казан 12л. с крышкой',  'code_first' => 4680019120010, 'code_second'  => 4680019120034],
+            5009 => [ 'id' => 5009,  'name' => 'Казан 12л. с ручкой',  'code_first' => 4680019125046, 'code_second'  => 4680019120034],
+            5010 => [ 'id' => 5010,  'name' => 'Казан 6л. с крышкой',  'code_first' => 4680019129358, 'code_second'  => 4680019129273],
+            5007 => [ 'id' => 5007,  'name' => 'Казан 6л. с ручкой',  'code_first' => 4680019129334, 'code_second'  => 4680019129273],
+            5011 => [ 'id' => 5011,  'name' => 'Казан 8л. с крышкой',  'code_first' => 4680019120027, 'code_second'  => 4680019120041],
+            5008 => [ 'id' => 5008,  'name' => 'Казан 8л. с ручкой',  'code_first' => 4680019125053, 'code_second'  => 4680019120041],
+            5143 => [ 'id' => 5143,  'name' => 'Сербский Казан 14 л.',  'code_first' => 4610094703198, 'code_second'  => 4610094703204],
+            4907 => [ 'id' => 4907,  'name' => 'Сковорода чугунная Везувий 6л Ø 380мм',  'code_first' => 4680046790545, 'code_second'  => 4680046790521],
+            4997 => [ 'id' => 4997,  'name' => 'Сковорода чугунная Везувий 9л Ø 455мм',  'code_first' => 4610094701866, 'code_second'  => 4610094701859]
+        ];
+
+        $result = [];
+        $arrCode = [];
+        $arrResults = [];
+
+        foreach ($pechnik as $item){
+            if (!in_array($item['code_first'], $arrCode)) $arrCode[] = $item['code_first'];
+            if (!in_array($item['code_second'], $arrCode)) $arrCode[] = $item['code_second'];
         }
 
-        $arrCode = $shop->pluck('code');
-        $data['absence'] = $origin->whereNotIn('code', $arrCode)->toArray();
+        $originArr = Origin::whereIn('code', $arrCode)->select('name', 'code', 'price')->get()->toArray();
 
-        dd($data['absence']);
+        foreach ($originArr as $item){
+            $arrResults[$item['code']] = ['name'=>$item['name'], 'price' => $item['price']];
+        }
+
+         foreach ($pechnik as $item){
+             if(array_key_exists($item['code_first'], $arrResults) || array_key_exists($item['code_second'], $arrResults)){
+                 $result[] =  [
+                     'id'=> $item['id'],
+                     'name' => $item['name'],
+                     'code' =>  strval($item['code_first'].'/'.$item['code_second']),
+                     'price' =>  $arrResults[$item['code_first']]['price'] +  $arrResults[$item['code_second']]['price']
+                 ];
+             } else {
+                 $result[] =  [
+                     'id'=> $item['id'],
+                     'name' => $item['name'],
+                     'code' =>  strval($item['code_first'].'/'.$item['code_second']),
+                     'price' =>  null
+                 ];
+             }
+         }
 
 
-*/
 
-        $exempl = new \App\Library\ResearchData;
-        $data = $exempl->getData();
-
-
-
-       //return (new \App\Exports\ResearchDataAllExport($data))->download('data.xlsx');
-
-        return (new \App\Exports\Sheets\ResearchDataAbsenceExport($data['absence']))->download('data.xlsx');
+        dd($result);
 
 
 

@@ -62,16 +62,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
 
 
 
-
-
     Route::get('/origin', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportOrigenPrice'])->name('show.origin');
     Route::post('/origin', [App\Http\Controllers\Price\ImportPriceListController::class, 'getImportOrigenPrice'])->name('get.origin');
 
     Route::get('/temporary', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportTemporaryPrice'])->name('show.temporary');
     Route::post('/temporary', [App\Http\Controllers\Price\ImportPriceListController::class, 'getImportTemporaryPrice'])->name('get.temporary');
 
+    Route::get('/research', [App\Http\Controllers\Price\ImportPriceListController::class, 'showResearchPrice'])->name('show.research');
+    Route::get('/research-get', [App\Http\Controllers\Price\ImportPriceListController::class, 'getResearchPrice'])->name('get.research');
 
-
+    Route::get('/pechnik-sum', [App\Http\Controllers\Price\ImportPriceListController::class, 'getPechnikSum'])->name('get.pechnik-sum');
 
 
 });

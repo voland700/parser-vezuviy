@@ -2,36 +2,35 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class ResearchDataAllExport implements WithMultipleSheets
+use Maatwebsite\Excel\Concerns\Exportable;
+
+class ResearchDataAllExport implements FromArray, WithMultipleSheets
 {
     use Exportable;
 
-    protected $found;
-    protected $lack;
-    protected $absence;
-    protected $data;
+    protected $sheets;
 
-
-    public function collection(array $data)
+    public function __construct(array $sheets)
     {
-        dd($data);
+        $this->sheets = $sheets;
+    }
 
-        $this->found = $data['found'];
-        $this->lack = $data['lack'];
-        $this->absence = $data['absence'];
+    public function array(): array
+    {
+        return $this->sheets;
     }
 
     public function sheets(): array
     {
-        $sheets = [];
-        //dd(new ResearchDataFoundExport($this->found));
-        if($this->found) $sheets[] = new ResearchDataFoundExport($this->found);
-        if($this->lack)  $sheets[] = new ResearchDataLackExport($this->lack);
-        if($this->absence) $sheets[] = new ResearchDataAbsenceExport($this->absence);
+        $sheets = [
+            new ResearchDataFoundExport($this->sheets['found']),
+            new ResearchDataLackExport($this->sheets['lack']),
+            new ResearchDataEmptyExport($this->sheets['empty']),
+            new ResearchDataAbsenceExport($this->sheets['absence'])
+        ];
         return $sheets;
     }
 }

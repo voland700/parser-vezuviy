@@ -332,12 +332,16 @@ return [
             'icon' => 'nav-icon fas fa-file-import',
         ],
         [
-            'text' => 'Загрузка данных магазина',
+            'text' => 'Загрузка магазина',
             'route'  => 'show.temporary',
             'icon' => 'nav-icon fas fa-file-import',
         ],
 
-
+        [
+            'text' => 'Анализ цен',
+            'route'  => 'show.research',
+            'icon' => 'nav-icon fas fa-info-circle',
+        ],
 
         [
             'text'    => 'multilevel',
