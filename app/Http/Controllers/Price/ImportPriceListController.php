@@ -9,9 +9,15 @@ use Illuminate\Support\Facades\DB;
 
 use App\Imports\OriginalImport;
 use App\Imports\TemporaryImport;
+use App\Imports\PechnikImport;
+use App\Imports\legendaImport;
+use App\Imports\TulaImport;
 
 use App\Models\Origin;
 use App\Models\Temporary;
+use App\Models\Pechnik;
+use App\Models\Legenda;
+use App\Models\Tula;
 
 use Carbon\Carbon;
 
@@ -46,11 +52,12 @@ class ImportPriceListController extends Controller
      {
          $count = DB::table('temporaries')->count();
          $date = null;
+         $table = 'Временная';
          if($count > 0){
              $one = DB::table('temporaries')->select('created_at')->first();
              $date = Carbon::parse($one->created_at)->translatedFormat('j F Y');
          }
-         return view('price.temporary_import', compact('count', 'date'));
+         return view('price.temporary_import', compact('count', 'date', 'table'));
      }
 
     public function getImportTemporaryPrice(FileRequest $request)
@@ -65,6 +72,89 @@ class ImportPriceListController extends Controller
             return back()->withFailures('Новые данные не загружены.');
         }
     }
+
+
+    public function showImportPechnikPrice()
+    {
+        $count = DB::table('pechniks')->count();
+        $date = null;
+        $table = 'Pechnik';
+        if($count > 0){
+            $one = DB::table('pechniks')->select('created_at')->first();
+            $date = Carbon::parse($one->created_at)->translatedFormat('j F Y');
+        }
+        return view('price.temporary_import', compact('count', 'date', 'table'));
+
+    }
+
+    public function getImportPechnikPrice(FileRequest $request)
+    {
+        $file = $request->file('file')->store('import');
+        Pechnik::truncate();
+        $import = new PechnikImport;
+        $import->import($file);
+        if($import->count > 0) {
+            return back()->withStatus('Данные загружены, успешно обработано и загружено '. $import->count .' строк.');
+        }  else {
+            return back()->withFailures('Новые данные не загружены.');
+        }
+    }
+
+
+    public function showImportLegendaPrice()
+    {
+        $count = DB::table('legendas')->count();
+        $date = null;
+        $table = 'Legenda';
+        if($count > 0){
+            $one = DB::table('legendas')->select('created_at')->first();
+            $date = Carbon::parse($one->created_at)->translatedFormat('j F Y');
+        }
+        return view('price.temporary_import', compact('count', 'date', 'table'));
+
+    }
+
+    public function getImportLegendaPrice(FileRequest $request)
+    {
+        $file = $request->file('file')->store('import');
+        Legenda::truncate();
+        $import = new legendaImport;
+        $import->import($file);
+        if($import->count > 0) {
+            return back()->withStatus('Данные загружены, успешно обработано и загружено '. $import->count .' строк.');
+        }  else {
+            return back()->withFailures('Новые данные не загружены.');
+        }
+
+    }
+
+
+    public function showImportTulaPrice()
+    {
+        $count = DB::table('tulas')->count();
+        $date = null;
+        $table = 'Tula';
+        if($count > 0){
+            $one = DB::table('tulas')->select('created_at')->first();
+            $date = Carbon::parse($one->created_at)->translatedFormat('j F Y');
+        }
+        return view('price.temporary_import', compact('count', 'date', 'table'));
+
+    }
+
+    public function getImportTulaPrice(FileRequest $request)
+    {
+        $file = $request->file('file')->store('import');
+        Tula::truncate();
+        $import = new TulaImport;
+        $import->import($file);
+        if($import->count > 0) {
+            return back()->withStatus('Данные загружены, успешно обработано и загружено '. $import->count .' строк.');
+        }  else {
+            return back()->withFailures('Новые данные не загружены.');
+        }
+    }
+
 
 
     public function showResearchPrice()

@@ -61,12 +61,37 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
 
 
 
+    //загрузка данных о товарах - в табл. products
+    Route::get('/import-products', [App\Http\Controllers\Product\ProductController::class, 'showImportProductsExcel'])->name('show.import-products');
+    Route::post('/import-products', [App\Http\Controllers\Product\ProductController::class, 'getImportProductsExcel'])->name('get.import-products');
+
+
+    //загрузка прайс-лита производителя - поставщика
 
     Route::get('/origin', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportOrigenPrice'])->name('show.origin');
     Route::post('/origin', [App\Http\Controllers\Price\ImportPriceListController::class, 'getImportOrigenPrice'])->name('get.origin');
 
+
+    //загрузка прайс-листов магазинов
+
     Route::get('/temporary', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportTemporaryPrice'])->name('show.temporary');
     Route::post('/temporary', [App\Http\Controllers\Price\ImportPriceListController::class, 'getImportTemporaryPrice'])->name('get.temporary');
+
+    Route::get('/temp-pechnik', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportPechnikPrice'])->name('show.tem-pechnik');
+    Route::post('/temp-pechnik', [App\Http\Controllers\Price\ImportPriceListController::class, 'getImportPechnikPrice'])->name('get.tem-pechnik');
+
+    Route::get('/temp-legenda', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportLegendaPrice'])->name('show.temp-legenda');
+    Route::post('/temp-legenda', [App\Http\Controllers\Price\ImportPriceListController::class, 'getImportLegendaPrice'])->name('get.temp-legenda');
+
+    Route::get('/temp-tula', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportTulaPrice'])->name('show.tem-tula');
+    Route::post('/temp-tula', [App\Http\Controllers\Price\ImportPriceListController::class, 'getImportTulaPrice'])->name('get.tem-tula');
+
+
+
+
+
+
+
 
     Route::get('/research', [App\Http\Controllers\Price\ImportPriceListController::class, 'showResearchPrice'])->name('show.research');
     Route::get('/research-get', [App\Http\Controllers\Price\ImportPriceListController::class, 'getResearchPrice'])->name('get.research');

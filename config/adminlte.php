@@ -332,17 +332,47 @@ return [
             'icon' => 'nav-icon fas fa-file-import',
         ],
         [
-            'text' => 'Загрузка магазина',
-            'route'  => 'show.temporary',
-            'icon' => 'nav-icon fas fa-file-import',
+            'text'    => 'Загрузка магазина',
+            'icon'    => 'nav-icon fas fa-file-import',
+            'submenu' => [
+                [
+                    'text' => 'Временная',
+                    'route'  => 'show.temporary',
+                ],
+                [
+                    'text' => 'pechnik.su',
+                    'route'  => 'show.tem-pechnik',
+                ],
+                [
+                    'text' => 'vezuviy-legenda.ru',
+                    'route'  => 'show.temp-legenda',
+                ],
+                [
+                    'text' => 'pechi-tula.ru',
+                    'route'  => 'show.tem-tula',
+                ],
+            ],
         ],
-
+        ['header' => 'Анализ данных'],
         [
             'text' => 'Анализ цен',
             'route'  => 'show.research',
             'icon' => 'nav-icon fas fa-info-circle',
         ],
 
+        ['header' => 'Товары Везувий'],
+        [
+            'text' => 'Импорт товаров',
+            'route'  => 'show.import-products',
+            'icon' => 'nav-icon fas fa-download',
+        ],
+
+
+
+
+
+
+        ['header' => 'Демо данные'],
         [
             'text'    => 'multilevel',
             'icon'    => 'fas fa-fw fa-share',

@@ -14,23 +14,40 @@
         </div>
     @endif
 
+    @php
+        $title = '';
+        if($table == 'Временная') $title = 'Загрузка данных любого магазина';
+        if($table == 'Pechnik') $title = 'Загрузка данных магазина pechnik.su';
+        if($table == 'Legenda') $title = 'Загрузка данных магазина vezuviy-legenda.ru';
+        if($table == 'Tula') $title = 'Загрузка данных магазина pechi-tla.ru';
+    @endphp
 
-    <x-adminlte-card title="Загрузка: прайс-лист магазина" class="col-12" collapsible removable maximizable>
-        <div class="col-lg-6">
+    <x-adminlte-card title="{{$title}}" class="col-12" collapsible removable maximizable>
+        <div class="col-lg-9">
             <div class="callout callout-info">
-                <h5>{{ $count > 0 ? 'В базе данных содержаться записи' : 'База данных не содержит записей' }}</h5>
+                <h5>{{ $count > 0 ? 'В таблице базы данных '.$table.'  содержаться записи' : 'Таблица базы данных '.$table.' не содержит записей' }}</h5>
 
                 @if($count > 0)
-                    <p>В таблице базы данных содержится <span class="text-success font-weight-bold">{{$count}}</span> записи от <span class="text-success font-italic">{{ $date }}</span>.</p>
+                    <p>Всего <span class="text-success font-weight-bold">{{$count}}</span> записи от <span class="text-success font-italic">{{ $date }}</span>.</p>
                 @endif
             </div>
 
-            <p>Загрзка данных о товарах Везувий - из прайс-листа магазина, для последующего сравнения.</p>
+            <div class="mb-4 mt-4">
+                @if($table == 'Временная')
+                    <p>Таблица базы данных <b>"Временная"</b> - предназначена для временной загрузки данных люборго из магазинов содержащих товары производителя Везувий.</p>
+                @elseif($table == 'Pechnik')
+                    <p>Таблица базы данных <b>"pechnik"</b> - предназначена для временной загрузки данных <b>pechnik.su</b>.</p>
+                @elseif($table == 'Legenda')
+                    <p>Таблица базы данных <b>"legenda"</b> - предназначена для временной загрузки данных <b>Vezuviy-legenda.ru</b>.</p>
+                @elseif($table == 'Tula')
+                    <p>Таблица базы данных <b>"tula"</b> - предназначена для временной загрузки данных <b>pechi-tla.ru</b>.</p>
+                @endif
+            </div>
+            <div class="mb-5">
+            <p>Загрузка данных о товарах Везувий - из прайс-листа магазина, для последующего сравнения.</p>
             <p>При загрузке прайс листа - текущие записи содержащиеся в таблице базы данных удаляются.Таблица очищается, загружаются только данные,
                 содержащиеся в загружаемом прайс-листе.</p>
             <p>Сравнение цен с орегинальным, предварительно загруженным прайс-листом производителя Везувий, происходит по полю <b>code</b> в котором содержится штрих-код - уникальный код товара </p>
-
-
             <h5>Поля загружемеого прайс-листа</h5>
             <ul>
                 <li><b>product_id</b> -  ID товара в каталоге интернет-магазина</li>
@@ -39,7 +56,17 @@
                 <li><b>code</b> - Штрих-код - Уникальный код товара </li>
                 <li><b>price</b> - Цена товара в каталоге интернет-магазина</li>
             </ul>
-            <form action="{{route('get.temporary')}}" method="post" enctype="multipart/form-data">
+            </div>
+            <div class="mb-5">
+            @if($table == 'Временная')
+                <form action="{{route('get.temporary')}}" method="post" enctype="multipart/form-data">
+            @elseif($table == 'Pechnik')
+                <form action="{{route('get.tem-pechnik')}}" method="post" enctype="multipart/form-data">
+            @elseif($table == 'Legenda')
+                <form action="{{route('get.temp-legenda')}}" method="post" enctype="multipart/form-data">
+            @elseif($table == 'Tula')
+                 <form action="{{route('get.tem-tula')}}" method="post" enctype="multipart/form-data">
+            @endif
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
@@ -58,6 +85,7 @@
                     </div>
                 </div>
             </form>
+            </div>
         </div>
 
     </x-adminlte-card>
