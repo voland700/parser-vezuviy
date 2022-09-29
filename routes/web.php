@@ -52,15 +52,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/source', [\App\Http\Controllers\Parser\ParserController::class, 'showGoodsOnSource'])->name('show.source');
 
 
-    Route::get('/products', [App\Http\Controllers\Parser\ParserController::class, 'showProductsToModel'])->name('show.products');
-    Route::post('/products', [App\Http\Controllers\Parser\ParserController::class, 'getProductsToModel'])->name('get.products');
+    Route::get('/pars-products', [App\Http\Controllers\Parser\ParserController::class, 'showProductsToModel'])->name('show.products');
+    Route::post('/pars-products', [App\Http\Controllers\Parser\ParserController::class, 'getProductsToModel'])->name('get.products');
+
 
 
     Route::get('/list-products', [App\Http\Controllers\Parser\ParserController::class, 'listProductsToModel'])->name('list.products');
     Route::get('/list-product/{id?}', [App\Http\Controllers\Parser\ParserController::class, 'getProductToModel'])->name('one.product');
 
 
-
+    Route::resource('/product', \App\Http\Controllers\Product\ProductController::class);
     //загрузка данных о товарах - в табл. products
     Route::get('/import-products', [App\Http\Controllers\Product\ProductController::class, 'showImportProductsExcel'])->name('show.import-products');
     Route::post('/import-products', [App\Http\Controllers\Product\ProductController::class, 'getImportProductsExcel'])->name('get.import-products');

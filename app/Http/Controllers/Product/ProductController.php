@@ -19,7 +19,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::select('id', 'name', 'number', 'code', 'price', 'link')->get();
+        return view('product.index', compact('products'));
     }
 
     /**

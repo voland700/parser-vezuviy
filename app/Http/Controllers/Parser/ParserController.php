@@ -174,11 +174,6 @@ class ParserController extends Controller
         $document->first('noscript')->remove();
 
 
-
-        //dd($metrika);
-
-
-
         $element = new \DiDom\Element('script');
         $element->setAttribute('src', env('APP_URL').'/assets/admin/source.js');
 
