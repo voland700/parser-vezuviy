@@ -23,7 +23,7 @@
                 'Name',
                 ['label' => 'Артикул', 'width' => 10],
                 ['label' => 'Код', 'width' => 10],
-                ['label' => 'Actions', 'no-export' => true, 'width' => 8],
+                ['label' => 'Actions', 'no-export' => true, 'width' => 10],
             ];
             $config = [
                 'order' => [[1, 'asc']],
@@ -49,6 +49,7 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-xs btn-danger mx-1 shadow delete" onclick="return confirm('Подтвердите удаление')"><i class="fa fa-lg fa-fw fa-trash"></i></button>
                         </form>
+                        <a href="{{ route('product.show', $product->id) }}" class="btn btn-xs btn-primary mx-1 shadow"><i class="fa fa-lg fa-fw fa-eye"></i></a>
                     </td>
                 </tr>
             @endforeach

@@ -111,7 +111,6 @@ class ImportPriceListController extends Controller
             $date = Carbon::parse($one->created_at)->translatedFormat('j F Y');
         }
         return view('price.temporary_import', compact('count', 'date', 'table'));
-
     }
 
     public function getImportLegendaPrice(FileRequest $request)
@@ -156,7 +155,7 @@ class ImportPriceListController extends Controller
     }
 
 
-
+/* -- В новый контроллер, далее удалить
     public function showResearchPrice()
     {
         $store['count'] = DB::table('temporaries')->count();
@@ -183,10 +182,9 @@ class ImportPriceListController extends Controller
     {
         $data = \App\Library\getSumProducts::getData();
         return (new \App\Exports\GetSumProductsExport($data))->download('pechnik_sum.xlsx');
-
     }
 
-
+*/
 
 
 

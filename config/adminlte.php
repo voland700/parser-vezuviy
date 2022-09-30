@@ -354,13 +354,35 @@ return [
             ],
         ],
         ['header' => 'Анализ данных'],
-        [
-            'text' => 'Анализ цен',
-            'route'  => 'show.research',
-            'icon' => 'nav-icon fas fa-info-circle',
-        ],
 
+        [
+            'text'    => 'Анализ прайс-литов',
+            'icon'    => 'nav-icon fas fa-info-circle',
+            'submenu' => [
+                [
+                    'text' => 'Временная',
+                    'route'  => 'show.temp-research',
+                ],
+                [
+                    'text' => 'pechnik.su',
+                    'route'  => 'show.pechnik-research',
+                ],
+                [
+                    'text' => 'vezuviy-legenda.ru',
+                    'route'  => 'show.legenda-research',
+                ],
+                [
+                    'text' => 'pechi-tula.ru',
+                    'route'  => 'show.tula-research',
+                ],
+            ],
+        ],
         ['header' => 'Товары Везувий'],
+        [
+            'text' => 'Товары Везувий',
+            'route'  => 'product.index',
+            'icon' => 'fas fa-box-open nav-icon',
+        ],
         [
             'text' => 'Импорт товаров',
             'route'  => 'show.import-products',

@@ -38,7 +38,6 @@ Route::get('/test3', [App\Http\Controllers\Front\IndexController::class, 'test3'
 
 
 
-
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], function () {
 
     Route::get('/', [\App\Http\Controllers\Admin\IndexController::class, 'index'])->name('admin.index');
@@ -94,10 +93,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
 
 
 
-    Route::get('/research', [App\Http\Controllers\Price\ImportPriceListController::class, 'showResearchPrice'])->name('show.research');
-    Route::get('/research-get', [App\Http\Controllers\Price\ImportPriceListController::class, 'getResearchPrice'])->name('get.research');
+    Route::get('/research-temp', [App\Http\Controllers\Research\ResearchController::class, 'showResearchTemporaryPrice'])->name('show.temp-research');
+    Route::get('/research-pechnik', [App\Http\Controllers\Research\ResearchController::class, 'showResearchPechnikPrice'])->name('show.pechnik-research');
+    Route::get('/research-legenda', [App\Http\Controllers\Research\ResearchController::class, 'showResearchLegendaPrice'])->name('show.legenda-research');
+    Route::get('/research-tula', [App\Http\Controllers\Research\ResearchController::class, 'showResearchTulaPrice'])->name('show.tula-research');
 
-    Route::get('/pechnik-sum', [App\Http\Controllers\Price\ImportPriceListController::class, 'getPechnikSum'])->name('get.pechnik-sum');
+
+
+
+    Route::get('/get-research/{name}', [App\Http\Controllers\Research\ResearchController::class, 'getResearchPrice'])->name('get.research');
+
+    Route::get('/pechnik-sum', [App\Http\Controllers\Research\ResearchController::class, 'getPechnikSum'])->name('get.pechnik-sum');
 
 
 });

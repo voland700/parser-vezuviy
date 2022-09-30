@@ -30,7 +30,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('product.store');
     }
 
     /**
@@ -41,7 +41,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $messages = [
+            'name.required' => 'Укажите название товара',
+            'code.integer' => 'Штрих-код товара должен иметь числовое значение',
+            'number.unique' => 'Товар с указанным номром уже присутсвует в базе данных',
+            'code.unique' => 'Товар с указанным штрих-кодом уже присутсвует в базе данных'
+        ];
+        $this->validate($request, [
+            'name' => 'required',
+            'code' => 'integer|nullable|unique:products',
+            'number' => 'nullable|unique:products',
+        ],$messages);
+
+        $product = new Product($request->all());
+        $product->save();
+        return redirect()->route('product.index')->with('success', 'Данные успешно добавлены');
+
     }
 
     /**
@@ -52,7 +67,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+        return view('product.show', compact('product'));
     }
 
     /**
@@ -63,7 +79,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::find($id);
+        return view('product.update', compact('product'));
+
     }
 
     /**
@@ -75,7 +93,22 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+
+        //dd($request->all());
+        $messages = [
+            'name.required' => 'Укажите название товара',
+            'code.integer' => 'Штрих-код товара должен иметь числовое значение',
+            'number.unique' => 'Товар с указанным номром уже присутсвует в базе данных',
+            'code.unique' => 'Товар с указанным штрих-кодом уже присутсвует в базе данных'
+        ];
+        $this->validate($request, [
+            'name' => 'required',
+            'code' => 'integer|nullable|unique:products,code,'. $product->id,
+            'number' => 'nullable|unique:products,number,'. $product->id
+        ],$messages);
+        $product->update($request->all());
+        return redirect()->route('product.index')->with('success', 'Данные товара обновлены');
     }
 
     /**
@@ -86,7 +119,9 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+        return redirect()->route('product.index')->with('success', 'Данные товара удалены');
     }
 
 
