@@ -71,13 +71,5 @@
 @stop
 
 @section('js')
-    <script>
-        document.querySelectorAll('.custom-file-input').forEach(function (item) {
-            item.addEventListener('change',function(e){
-                let fileName = e.target.files[0].name;
-                let nextSibling = e.target.nextElementSibling
-                nextSibling.innerText = fileName
-            })
-        })
-    </script>
+
 @stop

@@ -66,11 +66,13 @@ class ParserController extends Controller
         }
     }
 
+    // Это что? Проверить необходимость функционала!
     public function showProductsToModel()
     {
         return view('parser.to_model');
     }
 
+    // Это что? Проверить необходимость функционала!
     public function getProductsToModel(Request $request)
     {
         $links = Parser::getCategoryLinks($request->link);
@@ -163,7 +165,7 @@ class ParserController extends Controller
 
     }
 
-
+    // Это что? Проверить необходимость функционала!
     public function showGoodsOnSource()
     {   $html = Parser::getContent('https://vezuviy.su');
 
@@ -178,14 +180,11 @@ class ParserController extends Controller
         $element->setAttribute('src', env('APP_URL').'/assets/admin/source.js');
 
         $body->appendChild($element);
-
         $document->first('body')->replace($body);
-
          echo $document->html();
-
-
-
     }
+
+
 
 
 

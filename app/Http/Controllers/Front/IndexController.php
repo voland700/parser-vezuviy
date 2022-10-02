@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Exports\ProductsExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Library\Parser;
+use App\Library\ParserAston;
 
 use DiDom\Document;
 use DiDom\Query;
@@ -52,7 +54,7 @@ class IndexController extends Controller
     public function test()
     {
 
-        $src = 'https://vezuviy.su/gotovim-na-vezuvii-ru/smoker-kudesnik-2/';
+        $src = 'https://aston-pech.ru/katalog/pechi-iz-nerzhaveyushchey-stali-aston/';
         $options = [];
         $video = [];
         $mainImages = '';
@@ -88,7 +90,6 @@ class IndexController extends Controller
             }
            if(Storage::disk('public')->put('upload/main/' . $fileName, $contents)) $mainImages = '/main/' . $fileName;
         }
-        */
 
         if(count($document->find('.ty-product-img a.cm-image-previewer')) > 1){
             $arrMore = $document->find('.ty-product-img a.cm-image-previewer');
@@ -107,6 +108,11 @@ class IndexController extends Controller
                 if(Storage::disk('public')->put('upload/more/' . $fileMoreName, $contents)) array_push($moreImages,  '/more/' . $fileMoreName);
             }
         }
+         */
+
+
+
+
         dd($moreImages);
     }
 
@@ -114,72 +120,176 @@ class IndexController extends Controller
 
     public function test2()
     {
+        $src = 'https://aston-pech.ru/katalog/pechi-iz-nerzhaveyushchey-stali-aston/';
+        $document = new Document($src, true);
+        $video = null;
 
-        dd((int)'4680046790545/4680046790521');
+
+        $options = [];
+        $item = $document->first('.item');
+        $name = $item->first('.models_info > span')->text();
+        $price = (int)preg_replace('/\s+/', '', $item->first('.models_info > p')->text());
+        $description = $item->first('.models_description')->innerHtml();
+
+        $ArrOptions = $document->find('.models_table tr');
+        foreach ($ArrOptions as $option){
+            $property = $option->find('td')[0]->text();
+            $value    = $option->find('td')[1]->text();
+            array_push($options,  ['name'=>$property, 'value'=>$value]);
+        }
+/*
+        $mainImgLink = $item->first('.models_image')->getAttribute('href');
+        if($mainImgLink){
+            $mainImgLink = 'https://aston-pech.ru/'.$mainImgLink;
+            $contents = file_get_contents($mainImgLink);
+            $ext = pathinfo($mainImgLink, PATHINFO_EXTENSION);
+            $fileName = 'aston_main_'.Str::lower(Str::random(5)).'.'.$ext;
+            if(Storage::disk('public')->put('upload/main/' . $fileName, $contents)) $mainImages = '/main/' . $fileName;
+        }
+
+        $moreImages = $item->find('.models_gallery a');
+        if (count($moreImages) > 0) {
+            $part_name = Str::lower(Str::random(5));
+            $key = 1;
+            foreach ($moreImages as $moreImgItem){
+                $moreImgLink = $moreImgItem->getAttribute('href');
+                $moreImgLink =  'https://aston-pech.ru/'.$moreImgLink;
+                $contents = file_get_contents($moreImgLink);
+                $ext = pathinfo($moreImgLink, PATHINFO_EXTENSION);
+                $fileName = 'aston_more_'.$key.'_'.$part_name.'.'.$ext;
+                if(Storage::disk('public')->put('upload/more/' . $fileName, $contents)) $mainImages = '/main/' . $fileName;
+            }
+        }
+
+*/
+        $videoUrl = $item->first('.models_video')->getAttribute('href');
+        if ($videoUrl) {
+            $parts = parse_url($videoUrl);
+            parse_str($parts['query'], $query);
+            $video =  $query['v'];
+        }
+
+
+
+
+
+
+        //$ArrOptions = $document->find('.models_table tr')[0];
+
+        //$option =  $ArrOptions->find('td')[1]->text();
+
+
+
+
+
+
+
+
+        dd($video);
+
+
+
+
 
 
 
 
     }
 
+
+
+
+
+
     public function test3(){
 
 
-        $pechnik = [
-            4691 => [ 'id' => 4691,  'name' => 'Сенсация «АКВА» 16 (ДТ-4)  с баком 30л',  'code_first' => 4680046792006, 'code_second'  => 4680046791986],
-            4692 => [ 'id' => 4692,  'name' => 'Сенсация «АКВА» 22 (ДТ-4) с баком 40л',  'code_first' => 4680046792013, 'code_second'  => 4680046791993],
-            5012 => [ 'id' => 5012,  'name' => 'Казан 12л. с крышкой',  'code_first' => 4680019120010, 'code_second'  => 4680019120034],
-            5009 => [ 'id' => 5009,  'name' => 'Казан 12л. с ручкой',  'code_first' => 4680019125046, 'code_second'  => 4680019120034],
-            5010 => [ 'id' => 5010,  'name' => 'Казан 6л. с крышкой',  'code_first' => 4680019129358, 'code_second'  => 4680019129273],
-            5007 => [ 'id' => 5007,  'name' => 'Казан 6л. с ручкой',  'code_first' => 4680019129334, 'code_second'  => 4680019129273],
-            5011 => [ 'id' => 5011,  'name' => 'Казан 8л. с крышкой',  'code_first' => 4680019120027, 'code_second'  => 4680019120041],
-            5008 => [ 'id' => 5008,  'name' => 'Казан 8л. с ручкой',  'code_first' => 4680019125053, 'code_second'  => 4680019120041],
-            5143 => [ 'id' => 5143,  'name' => 'Сербский Казан 14 л.',  'code_first' => 4610094703198, 'code_second'  => 4610094703204],
-            4907 => [ 'id' => 4907,  'name' => 'Сковорода чугунная Везувий 6л Ø 380мм',  'code_first' => 4680046790545, 'code_second'  => 4680046790521],
-            4997 => [ 'id' => 4997,  'name' => 'Сковорода чугунная Везувий 9л Ø 455мм',  'code_first' => 4610094701866, 'code_second'  => 4610094701859]
-        ];
+        $src = 'https://aston-pech.ru/katalog/otopitelnye-pechi-aston/';
+        $parser = ParserAston::getAstonProducts($src);
 
-        $result = [];
-        $arrCode = [];
-        $arrResults = [];
-
-        foreach ($pechnik as $item){
-            if (!in_array($item['code_first'], $arrCode)) $arrCode[] = $item['code_first'];
-            if (!in_array($item['code_second'], $arrCode)) $arrCode[] = $item['code_second'];
+        //собираем масив наимнований опций товаров
+        $allOpt = Arr::pluck($parser, 'options');
+        $NamesProperty = [];
+        foreach ($allOpt as $itemOptions){
+            foreach ($itemOptions as $arrOne){
+                if(!in_array($arrOne['name'], $NamesProperty)){
+                    array_push($NamesProperty,  $arrOne['name']);
+                }
+            }
         }
 
-        $originArr = Origin::whereIn('code', $arrCode)->select('name', 'code', 'price')->get()->toArray();
+        $countProducts = count($parser);
 
-        foreach ($originArr as $item){
-            $arrResults[$item['code']] = ['name'=>$item['name'], 'price' => $item['price']];
-        }
-
-         foreach ($pechnik as $item){
-             if(array_key_exists($item['code_first'], $arrResults) || array_key_exists($item['code_second'], $arrResults)){
-                 $result[] =  [
-                     'id'=> $item['id'],
-                     'name' => $item['name'],
-                     'code' =>  strval($item['code_first'].'/'.$item['code_second']),
-                     'price' =>  $arrResults[$item['code_first']]['price'] +  $arrResults[$item['code_second']]['price']
-                 ];
-             } else {
-                 $result[] =  [
-                     'id'=> $item['id'],
-                     'name' => $item['name'],
-                     'code' =>  strval($item['code_first'].'/'.$item['code_second']),
-                     'price' =>  null
-                 ];
-             }
-         }
+        $export = new ProductsExport($parser, $NamesProperty);
+        $fileName = 'upload/export_products_'.time().'.xlsx';
+        $export->store($fileName, 'local');
 
 
 
-        dd($result);
+        dd($parser);
 
 
 
 
 
+
+
+        /*
+                $pechnik = [
+                    4691 => [ 'id' => 4691,  'name' => 'Сенсация «АКВА» 16 (ДТ-4)  с баком 30л',  'code_first' => 4680046792006, 'code_second'  => 4680046791986],
+                    4692 => [ 'id' => 4692,  'name' => 'Сенсация «АКВА» 22 (ДТ-4) с баком 40л',  'code_first' => 4680046792013, 'code_second'  => 4680046791993],
+                    5012 => [ 'id' => 5012,  'name' => 'Казан 12л. с крышкой',  'code_first' => 4680019120010, 'code_second'  => 4680019120034],
+                    5009 => [ 'id' => 5009,  'name' => 'Казан 12л. с ручкой',  'code_first' => 4680019125046, 'code_second'  => 4680019120034],
+                    5010 => [ 'id' => 5010,  'name' => 'Казан 6л. с крышкой',  'code_first' => 4680019129358, 'code_second'  => 4680019129273],
+                    5007 => [ 'id' => 5007,  'name' => 'Казан 6л. с ручкой',  'code_first' => 4680019129334, 'code_second'  => 4680019129273],
+                    5011 => [ 'id' => 5011,  'name' => 'Казан 8л. с крышкой',  'code_first' => 4680019120027, 'code_second'  => 4680019120041],
+                    5008 => [ 'id' => 5008,  'name' => 'Казан 8л. с ручкой',  'code_first' => 4680019125053, 'code_second'  => 4680019120041],
+                    5143 => [ 'id' => 5143,  'name' => 'Сербский Казан 14 л.',  'code_first' => 4610094703198, 'code_second'  => 4610094703204],
+                    4907 => [ 'id' => 4907,  'name' => 'Сковорода чугунная Везувий 6л Ø 380мм',  'code_first' => 4680046790545, 'code_second'  => 4680046790521],
+                    4997 => [ 'id' => 4997,  'name' => 'Сковорода чугунная Везувий 9л Ø 455мм',  'code_first' => 4610094701866, 'code_second'  => 4610094701859]
+                ];
+
+                $result = [];
+                $arrCode = [];
+                $arrResults = [];
+
+                foreach ($pechnik as $item){
+                    if (!in_array($item['code_first'], $arrCode)) $arrCode[] = $item['code_first'];
+                    if (!in_array($item['code_second'], $arrCode)) $arrCode[] = $item['code_second'];
+                }
+
+                $originArr = Origin::whereIn('code', $arrCode)->select('name', 'code', 'price')->get()->toArray();
+
+                foreach ($originArr as $item){
+                    $arrResults[$item['code']] = ['name'=>$item['name'], 'price' => $item['price']];
+                }
+
+                 foreach ($pechnik as $item){
+                     if(array_key_exists($item['code_first'], $arrResults) || array_key_exists($item['code_second'], $arrResults)){
+                         $result[] =  [
+                             'id'=> $item['id'],
+                             'name' => $item['name'],
+                             'code' =>  strval($item['code_first'].'/'.$item['code_second']),
+                             'price' =>  $arrResults[$item['code_first']]['price'] +  $arrResults[$item['code_second']]['price']
+                         ];
+                     } else {
+                         $result[] =  [
+                             'id'=> $item['id'],
+                             'name' => $item['name'],
+                             'code' =>  strval($item['code_first'].'/'.$item['code_second']),
+                             'price' =>  null
+                         ];
+                     }
+                 }
+
+
+
+                dd($result);
+
+
+
+
+        */
 
 
 

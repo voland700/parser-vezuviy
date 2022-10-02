@@ -204,6 +204,59 @@ class Parser
         return $this;
     }
 
+
+    public function getAstonProduct($src)
+    {
+        $html = self::getContent($src);
+        if(!$html) return $this;
+        $this->link = $src;
+        $this->allowed = true;
+        $document = new Document($html);
+
+        $items = $document->find('.item');
+
+        dd($items);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static function getPagination($url)
     {
         $html = self::getContent($url);
