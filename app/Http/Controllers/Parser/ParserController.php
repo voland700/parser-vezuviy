@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Parser;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Library\Parser;
+use App\Library\ParserAston;
 
 use App\Models\Test;
 use Illuminate\Support\Arr;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ProductsExport;
+use App\Exports\AstonExport;
 
 
 class ParserController extends Controller
@@ -62,7 +64,7 @@ class ParserController extends Controller
             $massage = 'Всего получено: <b>'.$countProducts.'</b> товара из <b>'.$countLinks.'</b>.   Файл:  <a href="'.'/'.$fileName.'" target="_blank">'.$fileName.'</a>';
             return redirect()->back()->with('success', $massage);
         } else{
-            return redirect()->back()->with('error', 'Что то пошло не так, проверти ссылки');
+            return redirect()->back()->with('error', 'Что то пошло не так, проверте ссылки');
         }
     }
 
@@ -165,6 +167,45 @@ class ParserController extends Controller
 
     }
 
+    public function showAstonProducts()
+    {
+        return view('parser.aston_link');
+    }
+
+    public function getAstonProducts(Request $request)
+    {
+        $parser = ParserAston::getAstonProducts($request->link);
+
+        //собираем масив наимнований опций товаров
+        $allOpt = Arr::pluck($parser, 'options');
+        $NamesProperty = [];
+        foreach ($allOpt as $itemOptions){
+            foreach ($itemOptions as $arrOne){
+                if(!in_array($arrOne['name'], $NamesProperty)){
+                    array_push($NamesProperty,  $arrOne['name']);
+                }
+            }
+        }
+        $countProducts = count($parser);
+        $export = new AstonExport($parser, $NamesProperty);
+        $fileName = 'upload/export_aston___'.time().'.xlsx';
+        $export->store($fileName, 'local');
+
+        if($countProducts>0) {
+            $massage = 'По ссылке получено: <b>'.$countProducts.'</b> товара  Файл:  <a href="'.'/'.$fileName.'" target="_blank">'.$fileName.'</a>';
+            return redirect()->back()->with('success', $massage);
+        } else{
+            return redirect()->back()->with('error', 'Что то пошло не так, проверте ссылки');
+        }
+    }
+
+
+
+
+
+
+
+
     // Это что? Проверить необходимость функционала!
     public function showGoodsOnSource()
     {   $html = Parser::getContent('https://vezuviy.su');
@@ -183,6 +224,9 @@ class ParserController extends Controller
         $document->first('body')->replace($body);
          echo $document->html();
     }
+
+
+
 
 
 

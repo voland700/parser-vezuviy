@@ -323,6 +323,11 @@ return [
             'route'  => 'show.list-links',
             'icon' => 'fas fa-bars nav-icon',
         ],
+        [
+            'text' => 'Парсинг ASTON',
+            'route'  => 'show.aston',
+            'icon' => 'fas fa-parking nav-icon',
+        ],
 
         ['header' => 'Работа с прайс-листами'],
 

@@ -34,22 +34,29 @@ class ParserAston
             $mainImg = null;
             $moreImages = [];
             $options = [];
+            $optionsJSON = [];
 
             $name = $item->first('.models_info > span')->text();
             $price = (int)preg_replace('/\s+/', '', $item->first('.models_info > p')->text());
             $description = $item->first('.models_description')->innerHtml();
-            $ArrOptions = $document->find('.models_table tr');
+
+
+
+            $description = str_replace('&#13;', '', $description);
+
+
+            $ArrOptions =  $item->find('.models_table tr');
             if(count($ArrOptions)>0){
+                $key = 1;
                 foreach ($ArrOptions as $option){
                     $property = $option->find('td')[0]->text();
                     $value    = $option->find('td')[1]->text();
+                    $optionsJSON[$key] = ['name'=>$property, 'value'=>$value];
+                    $key++;
                     array_push($options,  ['name'=>$property, 'value'=>$value]);
                 }
             }
-
             $videoUrl = $item->first('.models_video');
-
-
             if ($videoUrl) {
                 $videoUrl->getAttribute('href');
                 $parts = parse_url($videoUrl);
@@ -68,11 +75,11 @@ class ParserAston
                 $fileName = 'aston_main_'.Str::lower(Str::random(5)).'.'.$ext;
                 if(Storage::disk('public')->put('upload/main/' . $fileName, $contents)) $mainImg = $fileName;
             }
-            $moreImages = $item->find('.models_gallery a');
-            if (count($moreImages) > 0) {
+            $moreImagesArr = $item->find('.models_gallery a');
+            if (count($moreImagesArr) > 0) {
                 $part_name = Str::lower(Str::random(5));
                 $key = 1;
-                foreach ($moreImages as $moreImgItem){
+                foreach ($moreImagesArr as $moreImgItem){
                     $moreImgLink = $moreImgItem->getAttribute('href');
                     $moreImgLink = 'https://aston-pech.ru/'.$moreImgLink;
                     if (preg_match("|\s|", $moreImgLink) ){
@@ -87,10 +94,9 @@ class ParserAston
                 }
             }
 
-            self::$products[] = collect([
+            self::$products[] = [
                 'link' => $src,
                 'name' => $name,
-                'categories'=> null,
                 'category' => $categoriy,
                 'artNamber' => null,
                 'image' => $mainImg,
@@ -98,9 +104,9 @@ class ParserAston
                 'price' => $price,
                 'description' => $description,
                 'options' => $options,
-                'documentation' => [],
+                'json' =>  count($optionsJSON)>0 ? json_encode($optionsJSON, JSON_UNESCAPED_UNICODE) : null,
                 'video' => $video
-            ]);
+            ];
         }
 
         return self::$products;

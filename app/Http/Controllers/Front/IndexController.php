@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Library\Parser;
 use App\Library\ParserAston;
 
+use App\Exports\AstonExport;
+
 use DiDom\Document;
 use DiDom\Query;
 use GuzzleHttp\Client;
@@ -203,10 +205,41 @@ class IndexController extends Controller
 
     public function test3(){
 
+/*
+        $src = 'https://aston-pech.ru/katalog/otopitelnye-pechi-aston/';
+
+        $html = Parser::getContent($src);
+        if(!$html) return self::$products;
+        $document = new Document($html);
+        $item = $document->find('.item')[0];
+
+
+
+        $moreImagesArr = $item->find('.models_gallery a');
+        if (count($moreImages) > 0) {
+            $part_name = Str::lower(Str::random(5));
+            $key = 1;
+            foreach ($moreImagesArr as $moreImgItem){
+                $moreImgLink = $moreImgItem->getAttribute('href');
+                $moreImgLink = 'https://aston-pech.ru/'.$moreImgLink;
+                if (preg_match("|\s|", $moreImgLink) ){
+                    $moreImgLink = str_replace(' ', '%20', $moreImgLink);
+                }
+                $contents = file_get_contents($moreImgLink);
+                $ext = pathinfo($moreImgLink, PATHINFO_EXTENSION);
+                $fileName = 'aston_more_'.$key.'_'.$part_name.'.'.$ext;
+                if(Storage::disk('public')->put('upload/more/' . $fileName, $contents))  $moreImg = '/more/' . $fileName;
+                array_push($moreImages,  $moreImg);
+                $key++;
+            }
+        }
+
+*/
+
 
         $src = 'https://aston-pech.ru/katalog/otopitelnye-pechi-aston/';
         $parser = ParserAston::getAstonProducts($src);
-
+        $NamesProperty = [];
         //собираем масив наимнований опций товаров
         $allOpt = Arr::pluck($parser, 'options');
         $NamesProperty = [];
@@ -218,15 +251,24 @@ class IndexController extends Controller
             }
         }
 
+        //return view('parser.excel_table_aston', ['products' => $parser, 'NamesProperty'=> $NamesProperty] );
+
+
+
+        //dd($parser);
+
         $countProducts = count($parser);
 
-        $export = new ProductsExport($parser, $NamesProperty);
-        $fileName = 'upload/export_products_'.time().'.xlsx';
+        $export = new AstonExport($parser, $NamesProperty);
+        $fileName = 'upload/export_aston___'.time().'.xlsx';
         $export->store($fileName, 'local');
 
 
+        //return (new \App\Exports\AstonExport($parser, $NamesProperty))->download('data_aston'.'.xlsx');
 
-        dd($parser);
+
+
+         echo "Успешно получено {$countProducts} документа!";
 
 
 

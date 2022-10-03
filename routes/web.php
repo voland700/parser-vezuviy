@@ -54,10 +54,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/pars-products', [App\Http\Controllers\Parser\ParserController::class, 'showProductsToModel'])->name('show.products');
     Route::post('/pars-products', [App\Http\Controllers\Parser\ParserController::class, 'getProductsToModel'])->name('get.products');
 
-
-
     Route::get('/list-products', [App\Http\Controllers\Parser\ParserController::class, 'listProductsToModel'])->name('list.products');
     Route::get('/list-product/{id?}', [App\Http\Controllers\Parser\ParserController::class, 'getProductToModel'])->name('one.product');
+
+    Route::get('/show-aston', [\App\Http\Controllers\Parser\ParserController::class, 'showAstonProducts'])->name('show.aston');
+    Route::post('/get-aston', [App\Http\Controllers\Parser\ParserController::class, 'getAstonProducts'])->name('get.aston');
+
+
 
 
     Route::resource('/product', \App\Http\Controllers\Product\ProductController::class);

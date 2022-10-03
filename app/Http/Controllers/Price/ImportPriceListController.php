@@ -153,41 +153,4 @@ class ImportPriceListController extends Controller
             return back()->withFailures('Новые данные не загружены.');
         }
     }
-
-
-/* -- В новый контроллер, далее удалить
-    public function showResearchPrice()
-    {
-        $store['count'] = DB::table('temporaries')->count();
-        $store['date'] = null;
-        if($store['count'] > 0) {
-            $store['date'] = Carbon::parse(DB::table('temporaries')->select('created_at')->first()->created_at)->translatedFormat('j F Y');
-        }
-
-        $origin['count'] = DB::table('origins')->count();
-        $origin['date'] = null;
-        if($origin['count'] > 0) {
-            $origin['date'] = Carbon::parse(DB::table('origins')->select('created_at')->first()->created_at)->translatedFormat('j F Y');
-        }
-        return view('price.research', compact('store', 'origin'));
-    }
-
-    public function getResearchPrice()
-    {
-        $data =  \App\Library\ResearchData::getData();
-        return (new \App\Exports\ResearchDataAllExport($data))->download('data.xlsx');
-    }
-
-    public function getPechnikSum()
-    {
-        $data = \App\Library\getSumProducts::getData();
-        return (new \App\Exports\GetSumProductsExport($data))->download('pechnik_sum.xlsx');
-    }
-
-*/
-
-
-
-
-
 }

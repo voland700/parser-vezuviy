@@ -65,6 +65,12 @@ class ResearchController extends Controller
         return (new \App\Exports\ResearchDataAllExport($data))->download('data_'.$name.'.xlsx');
     }
 
+    public function getPechnikSum()
+    {
+        $data = \App\Library\getSumProducts::getData();
+        return (new \App\Exports\GetSumProductsExport($data))->download('pechnik_sum.xlsx');
+    }
+
 
 
 
