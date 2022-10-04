@@ -382,6 +382,11 @@ return [
                 ],
             ],
         ],
+        [
+            'text' => 'Поиск по товарам',
+            'route'  => 'show.research-code',
+            'icon' => 'nav-icon fas fa-search-plus',
+        ],
         ['header' => 'Товары Везувий'],
         [
             'text' => 'Товары Везувий',

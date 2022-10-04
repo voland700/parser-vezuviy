@@ -101,7 +101,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/research-legenda', [App\Http\Controllers\Research\ResearchController::class, 'showResearchLegendaPrice'])->name('show.legenda-research');
     Route::get('/research-tula', [App\Http\Controllers\Research\ResearchController::class, 'showResearchTulaPrice'])->name('show.tula-research');
 
-
+    Route::get('/research-code', [App\Http\Controllers\Research\ResearchController::class, 'showResearchCode'])->name('show.research-code');
+    Route::post('/research-code', [App\Http\Controllers\Research\ResearchController::class, 'getResearchCode'])->name('get.research-code');
 
 
     Route::get('/get-research/{name}', [App\Http\Controllers\Research\ResearchController::class, 'getResearchPrice'])->name('get.research');

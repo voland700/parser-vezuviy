@@ -14,6 +14,7 @@ use App\Models\Pechnik;
 use App\Models\Legenda;
 use App\Models\Tula;
 
+
 use App\Library\GetInfo;
 
 
@@ -70,6 +71,59 @@ class ResearchController extends Controller
         $data = \App\Library\getSumProducts::getData();
         return (new \App\Exports\GetSumProductsExport($data))->download('pechnik_sum.xlsx');
     }
+
+    public function showResearchCode()
+    {
+        return view('parser.list_code');
+    }
+    public function getResearchCode(Request $request)
+    {
+        $listCount = 0;
+        $productsCount = 0;
+        $goods = [];
+        $list  = $request->list;
+        $list = explode("\n", $list);
+        foreach ($list as  $key => $row) {
+            $list[$key] = (int)trim($row);
+        }
+
+        $products = DB::table('products')->whereIn('code', $list)->get();
+
+        $listCount = count($list);
+        $productsCount = $products->count();
+
+        foreach ($list as $k => $one){
+            $item = $products->where('code', $one)->first();
+            if($item){
+                $goods[$k]['code'] = $one;
+                $goods[$k]['name'] = $item->name;
+                $goods[$k]['number'] = $item->number;
+                $goods[$k]['price'] = $item->price;
+                $goods[$k]['link'] = $item->link;
+            }else{
+                $goods[$k]['code'] = $one;
+                $goods[$k]['name'] = null;
+                $goods[$k]['number'] = null;
+                $goods[$k]['price'] = null;
+                $goods[$k]['link'] = null;
+            }
+        }
+
+
+
+       $fileName = 'products_code_'.time();
+       return (new \App\Exports\ResearchDataCodeProducts($goods))->download($fileName.'.xlsx');
+
+        if(count($listCount)>0 && count($productsCount)>0 ) {
+            $massage = 'Найдено: <b>'.$productsCount.'</b> товара из <b>'.$listCount.'</b> зарашиваемых.';
+            return redirect()->back()->with('success', $massage);
+        } else{
+            $massage = '<b>'.$productsCount.'</b> товаров из <b>'.$listCount.'</b>.';
+            return redirect()->back()->with('error', $massage);
+        }
+
+    }
+
 
 
 
