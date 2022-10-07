@@ -68,7 +68,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/import-products', [App\Http\Controllers\Product\ProductController::class, 'showImportProductsExcel'])->name('show.import-products');
     Route::post('/import-products', [App\Http\Controllers\Product\ProductController::class, 'getImportProductsExcel'])->name('get.import-products');
 
-
     //загрузка прайс-лита производителя - поставщика
 
     Route::get('/origin', [App\Http\Controllers\Price\ImportPriceListController::class, 'showImportOrigenPrice'])->name('show.origin');
@@ -108,6 +107,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'isadmin']], functio
     Route::get('/get-research/{name}', [App\Http\Controllers\Research\ResearchController::class, 'getResearchPrice'])->name('get.research');
 
     Route::get('/pechnik-sum', [App\Http\Controllers\Research\ResearchController::class, 'getPechnikSum'])->name('get.pechnik-sum');
+    Route::get('/tula-sum', [App\Http\Controllers\Research\ResearchController::class, 'getTulaSum'])->name('get.tula-sum');
+    Route::get('/legenda-sum', [App\Http\Controllers\Research\ResearchController::class, 'getLegendaSum'])->name('get.legenda-sum');
 
 
 });

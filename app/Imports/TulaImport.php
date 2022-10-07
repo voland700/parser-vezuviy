@@ -25,7 +25,7 @@ class TulaImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row)
         {
             if(!$row['product_id']) continue;
-            Temporary::create([
+            Tula::create([
                 'product_id' => $row['product_id'],
                 'active' => $row['active'] ?? null,
                 'name' => $row['name'] ? trim($row['name']) : null,

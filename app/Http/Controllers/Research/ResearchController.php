@@ -66,12 +66,6 @@ class ResearchController extends Controller
         return (new \App\Exports\ResearchDataAllExport($data))->download('data_'.$name.'.xlsx');
     }
 
-    public function getPechnikSum()
-    {
-        $data = \App\Library\getSumProducts::getData();
-        return (new \App\Exports\GetSumProductsExport($data))->download('pechnik_sum.xlsx');
-    }
-
     public function showResearchCode()
     {
         return view('parser.list_code');
@@ -108,9 +102,6 @@ class ResearchController extends Controller
                 $goods[$k]['link'] = null;
             }
         }
-
-
-
        $fileName = 'products_code_'.time();
        return (new \App\Exports\ResearchDataCodeProducts($goods))->download($fileName.'.xlsx');
 
@@ -122,6 +113,24 @@ class ResearchController extends Controller
             return redirect()->back()->with('error', $massage);
         }
 
+    }
+
+    public function getPechnikSum()
+    {
+        $data = \App\Library\getSumProducts::pechnik();
+        return (new \App\Exports\GetSumProductsExport($data))->download('pechnik_sum.xlsx');
+    }
+
+    public function getTulaSum()
+    {
+        $data = \App\Library\getSumProducts::tula();
+        return (new \App\Exports\GetSumProductsExport($data))->download('tula_sum.xlsx');
+    }
+
+    public function getLegendaSum()
+    {
+        $data = \App\Library\getSumProducts::legenda();
+        return (new \App\Exports\GetSumProductsExport($data))->download('legenda_sum.xlsx');
     }
 
 
