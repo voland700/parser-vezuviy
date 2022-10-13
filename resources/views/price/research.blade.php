@@ -45,11 +45,19 @@
                     <li><strong>empty</strong> - информация о товарах содержащихся в магазине, в который отсутствует поле code – для поиска и сопоставления цен с прайс-листом производителя.</li>
                     <li><strong>absence</strong> - информация о товарах содержащихся в прайс-листе производителя Везувий, но отсутствующих  в магазине.</li>
                 </ul>
+                <p>Так, же при наличии данных, вы можете получить данные о ценах комплектов товаров Везувий, <i>(сковорода + крышка, банная печь + бак, и т.д.)</i>.</p>
             </div>
-
             <div class="mb-5">
             @if($store['count'] && $origin['count'])
-                <a class="btn btn-primary" href="{{route('get.research', $name)}}" role="button">Анализ</a>
+                <a class="btn btn-primary" href="{{route('get.research', $name)}}" role="button">Анализ цен</a>
+                @if($name == 'pechniks')
+                        <a class="btn btn-primary" href="{{route('get.pechnik-sum')}}" role="button">Данные комплектов</a>
+                @elseif($name == 'legendas')
+                        <a class="btn btn-primary" href="{{route('get.tula-sum')}}" role="button">Данные комплектов</a>
+                @elseif($name == 'tulas')
+                        <a class="btn btn-primary" href="{{route('get.legenda-sum')}}" role="button">Данные комплектов</a>
+                @endif
+
             @else
                 @php
                     $massage = '';
